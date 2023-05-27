@@ -10,7 +10,7 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject private var vm: HomeViewModel
     @State private var isShowPortf: Bool = false
-    @ObservedObject var coins = CoinData()
+//    @ObservedObject var coins = CoinData()
     
     var body: some View {
         ZStack {
@@ -18,22 +18,19 @@ struct HomeView: View {
             
             VStack {
                 homeHeader
-                HStack {
-                    Text("Coin")
-                    Text("Holding")
-                    Text("Price")
-                }
+                
+                SearchBarView(searchText: $vm.searchText)
+                columnTitles
                 
                 if !isShowPortf {
                     allCoinsList
                         .transition(.move(edge: .leading))
+                        .searchable(text: $vm.searchText)
                 }
                 if isShowPortf {
                     portfolioCoinsList
                         .transition(.move(edge: .trailing))
                 }
-                
-//                Spacer()
             }
         }
     }
@@ -107,5 +104,20 @@ extension HomeView {
             await vm.fetchCoinData()
         }
     }
+    
+    private var columnTitles: some View {
+        HStack {
+            Text("Coin")
+            if isShowPortf {
+                Text("Holding")
+            }
+            Text("Price")
+                .frame(width: UIScreen.main.bounds.width / 3.5, alignment: .trailing)
+        }
+        .font(.caption)
+        .foregroundColor(Color.theme.secondaryText)
+        .padding(.horizontal)
+    }
+    
 }
 

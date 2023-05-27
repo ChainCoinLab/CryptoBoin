@@ -8,25 +8,42 @@
 import SwiftUI
 
 struct CoinListView: View {
-    
+    @ObservedObject private var vm = HomeViewModel()
     
     var body: some View {
         NavigationView {
-//            List{
-//                ForEach(coins.items) { item in
-//                    CoinRowView(coin: item,isShowHoldingColum: true)
-//                }
-//            }
-//            .navigationTitle("Coin list")
-//            .task {
-//                await coins.fetchData()
-//            }
-//            .refreshable {
-//               await coins.fetchData()
-//            }
+            List {
+                ForEach(vm.coinList) { coin in
+                    HStack {
+                        AsyncImage(url: URL(string: coin.logo)) { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        .frame(width: 32, height: 32)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(coin.coin_name)
+                            Text(coin.acronym)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+
+                }
+                .listStyle(.insetGrouped)
+            }
+            .listStyle(.insetGrouped)
+            .task {
+                await vm.fetchCoinList()
+            }
+            .refreshable {
+                await vm.fetchCoinList()
+            }
+            .navigationTitle("coin data")
         }
     }
-    
 }
 
 struct CoinListView_Previews: PreviewProvider {

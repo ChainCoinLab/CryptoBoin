@@ -15,17 +15,17 @@ struct Coin: Identifiable,Decodable {
 }
 
 
-//class CoinData: ObservableObject {
-//    @Published var items: [Coin] = []
-//    
-//    @MainActor
-//    func fetchData() async {
-//        do {
-//            let url = URL(string: "https://random-data-api.com/api/crypto_coin/random_crypto_coin?size=10")!
-//            let (data, _) = try await URLSession.shared.data(from: url)
-//            items = try JSONDecoder().decode([Coin].self, from: data)
-//        } catch (let error) {
-//            print(error)
-//        }
-//    }
-//}
+class CoinList: ObservableObject {
+    @Published var items: [Coin] = []
+    
+    @MainActor
+    func fetchData() async {
+        do {
+            let url = URL(string: "https://random-data-api.com/api/crypto_coin/random_crypto_coin?size=10")!
+            let (data, _) = try await URLSession.shared.data(from: url)
+            items = try JSONDecoder().decode([Coin].self, from: data)
+        } catch {
+            print("Error")
+        }
+    }
+}
